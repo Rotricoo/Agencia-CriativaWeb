@@ -8,286 +8,292 @@
     <link rel="stylesheet" href="CSS/styles.css" />
   </head>
   <body>
-    <header>
-      <button class="nav-toggle" aria-controls="site-nav" aria-expanded="false">MENU</button>
+    <header class="site-header">
+      <button class="site-header__toggle" aria-controls="site-nav" aria-expanded="false">MENU</button>
 
       <img
-        class="logo"
+        class="site-header__logo"
         src="Assets/@LogoBW-CreativeWebAgency.svg"
         srcset="Assets/@LogoBW-CreativeWebAgency.svg 1x"
         sizes="(max-width: 900px) 60vw, 20vw"
         alt="CreativeWeb Agency Logo"
       />
 
-      <nav class="navMenu" id="site-nav">
-        <a href="#home">Home</a>
-        <a href="#behindTheBrand">Behind the Brand</a>
-        <a href="#solutions">Solutions</a>
-        <a href="#contact" class="btn--contact--mobile">Contact</a>
+      <nav class="site-header__nav" id="site-nav">
+        <a class="site-header__link" href="#home">Home</a>
+        <a class="site-header__link" href="#behindTheBrand">Behind the Brand</a>
+        <a class="site-header__link" href="#solutions">Solutions</a>
+        <a class="site-header__link btn--contact--mobile" href="#contact">Contact</a>
       </nav>
-      <a class="btn btn--sm btn--secondary" href="#contact">Contact</a>
+      <a class="site-header__contact btn btn--sm btn--secondary" href="#contact">Contact</a>
     </header>
 
     <main>
-      <section id="home" class="hero-banner">
+      <section class="hero" id="home">
         <img
-          class="logo-mobile"
+          class="hero__logo hero__logo--mobile"
           src="Assets/@LogoBW-CreativeWebAgency.svg"
           srcset="Assets/@LogoBW-CreativeWebAgency.svg 1x"
           sizes="(max-width: 900px) 60vw, 20vw"
           alt="CreativeWeb Agency Logo"
         />
-        <h1>Design that positions<br />Strategy that stands out.</h1>
-        <p class="hero-text">
+        <h1 class="hero__title">Design that positions<br />Strategy that stands out.</h1>
+        <p class="hero__text">
           We help brands grow with clear visual identity, smart positioning, and digital solutions that actually work.
         </p>
 
-        <a href="#solutions" class="btn btn--lg btn--primary">Explore our solutions</a>
+        <a class="hero__cta btn btn--lg btn--primary" href="#solutions">Explore our solutions</a>
       </section>
 
-      <section id="behindTheBrand" class="behind-the-brand">
-        <h2>Building brands that lead.</h2>
-        <p class="behind-the-brand-text">
+      <!-- Behind the Brand - Team Section -->
+      <section class="team" id="behindTheBrand">
+        <h2 class="team__title">Building brands that lead.</h2>
+        <p class="team__text">
           We plan, create, and deliver digital experiences that solve real problems and drive results.
         </p>
-        <div class="behind-the-brand-images">
-          <div class="card card-small">
+        <div class="team__grid">
+          <div class="team__card team__card-small">
             <img
+              class="team__card--img"
               src="Assets/Matheus.jpg"
               srcset="Assets/Matheus.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Portrait of Matheus M., Creative Director"
             />
-            <p class="behind-the-brand-name">Matheus M.</p>
-            <p class="behind-the-brand-role">Creative Director</p>
-            <button class="behind-the-brand-bt" data-member="matheus" aria-label="More information about Matheus M.">
-              +
-            </button>
+            <p class="team__name">Matheus M.</p>
+            <p class="team__role">Creative Director</p>
+            <button class="team__btn" data-member="matheus" aria-label="More information about Matheus M.">+</button>
           </div>
-          <div class="card card-small">
+          <div class="team__card team__card-small">
             <img
+              class="team__card--img"
               src="Assets/Gleyce.jpg"
               srcset="Assets/Gleyce.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Portrait of Gleyce M., Executive Director"
             />
-            <p class="behind-the-brand-name">Gleyce M.</p>
-            <p class="behind-the-brand-role">Executive Director</p>
-            <button class="behind-the-brand-bt" data-member="gleyce" aria-label="More information about Gleyce M.">
-              +
-            </button>
+            <p class="team__name">Gleyce M.</p>
+            <p class="team__role">Executive Director</p>
+            <button class="team__btn" data-member="gleyce" aria-label="More information about Gleyce M.">+</button>
           </div>
-          <div class="card card-small">
+          <div class="team__card team__card-small">
             <img
+              class="team__card--img"
               src="Assets/Henrique.jpg"
               srcset="Assets/Henrique.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Portrait of Henrique M., Strategic Director"
             />
-            <p class="behind-the-brand-name">Henrique M.</p>
-            <p class="behind-the-brand-role">Strategic Director</p>
-            <button class="behind-the-brand-bt" data-member="henrique" aria-label="More information about Henrique M.">
-              +
-            </button>
+            <p class="team__name">Henrique M.</p>
+            <p class="team__role">Strategic Director</p>
+            <button class="team__btn" data-member="henrique" aria-label="More information about Henrique M.">+</button>
           </div>
-          <div class="card card-large">
+          <div class="team__card team__card-large">
             <img
+              class="team__card--img"
               src="Assets/Solitude.jpg"
               srcset="Assets/Solitude.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Logo of the client Solitude"
             />
-            <p class="behind-the-brand-name-project">Projects that drove brands</p>
-            <p class="behind-the-brand-brand">
+            <p class="team__name-project">Projects that drove brands</p>
+            <p class="team__brand">
               “Digital impact for major brands, complete repositioning, and performance increase.”
             </p>
           </div>
-          <div class="card card-extralarge">
+          <div class="team__card team__card-extralarge">
             <img
+              class="team__card--img"
               src="Assets/Crave.jpg"
               srcset="Assets/Crave.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Packaging of the product from the client Crave"
             />
-            <p class="behind-the-brand-name-project">Projects that drove brands</p>
-            <p class="behind-the-brand-brand">
-              “Renewed visual experience that elevated the company's perceived value.”
-            </p>
+            <p class="team__name-project">Projects that drove brands</p>
+            <p class="team__brand">“Renewed visual experience that elevated the company's perceived value.”</p>
           </div>
-          <div class="card card-small card-small-last">
+          <div class="team__card team__card-small team__card-small-last">
             <img
+              class="team__card--img"
               src="Assets/Paulo.jpg"
               srcset="Assets/Paulo.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Portrait of Paulo S., Public Relations Lead"
             />
-            <p class="behind-the-brand-name">Paulo S.</p>
-            <p class="behind-the-brand-role">Public Relations Lead</p>
-            <button class="behind-the-brand-bt" data-member="paulo" aria-label="More information about Paulo S.">
-              +
-            </button>
+            <p class="team__name">Paulo S.</p>
+            <p class="team__role">Public Relations Lead</p>
+            <button class="team__btn" data-member="paulo" aria-label="More information about Paulo S.">+</button>
           </div>
-          <div class="card card-small card-small-last">
+          <div class="team__card team__card-small team__card-small-last">
             <img
+              class="team__card--img"
               src="Assets/Rodrigo.jpg"
               srcset="Assets/Rodrigo.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Portrait of Rodrigo S., Creative Designer"
             />
-            <p class="behind-the-brand-name">Rodrigo S.</p>
-            <p class="behind-the-brand-role">Creative Designer</p>
-            <button class="behind-the-brand-bt" data-member="rodrigo" aria-label="More information about Rodrigo S.">
-              +
-            </button>
+            <p class="team__name">Rodrigo S.</p>
+            <p class="team__role">Creative Designer</p>
+            <button class="team__btn" data-member="rodrigo" aria-label="More information about Rodrigo S.">+</button>
           </div>
         </div>
-        <button class="btn btn--lg btn--primary bt-behind-the-brand">Explore portfolio</button>
+        <button class="team__cta--btn btn btn--lg btn--primary">Explore portfolio</button>
       </section>
 
-      <section id="solutions" class="solutions">
-        <h2 class="solutions-title">How we can help you</h2>
-        <p class="solutions-text">
+      <!-- Solutions Section -->
+
+      <section class="solutions" id="solutions">
+        <h2 class="solutions__title">How we can help you</h2>
+        <p class="solutions__text">
           Complete solutions to strengthen your brand, elevate your digital presence, and create experiences that
           generate real impact.
         </p>
-        <section class="solutions-cards">
-          <div class="solutions-carousel"></div>
+        <section class="solutions__cards">
+          <div class="solutions__carousel"></div>
 
-          <div class="solutions-details">
-            <div class="solutions-details-top">
-              <img class="solutions-details-icon" src="" alt="" />
-              <h3 class="solutions-details-title"></h3>
+          <div class="solutions__details">
+            <div class="solutions__details--top">
+              <img class="solutions__details--icon" src="" alt="" />
+              <h3 class="solutions__details--title"></h3>
             </div>
 
-            <p class="solutions-details-text"></p>
+            <p class="solutions__details--text"></p>
+            <ul class="solutions__details--list"></ul>
 
-            <ul class="solutions-details-list"></ul>
-
-            <button class="solutions-bt">+</button>
+            <button class="solutions__bt">+</button>
           </div>
         </section>
       </section>
 
       <section class="testimonials">
-        <button class="testimonials-prev" aria-label="Previous Testimonial">‹</button>
-        <div class="testimonials-track">
-          <div class="testimonials-div active">
+        <button class="testimonials__prev" aria-label="Previous Testimonial">‹</button>
+        <div class="testimonials__track">
+          <div class="testimonials__div testimonials__div--active">
             <img
+              class="testimonials__img"
               src="Assets/MariaFernades.jpg"
               srcset="Assets/MariaFernades.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="Marketing Director Maria Fernandes"
             />
-            <div class="testimonials-infos">
-              <p class="testimonials-name">Maria Fernandes, <strong>Marketing Director</strong></p>
-              <p class="testimonials-text">
+            <div class="testimonials__infos">
+              <p class="testimonials__name">Maria Fernandes, <strong>Marketing Director</strong></p>
+              <p class="testimonials__text">
                 “Amazing professionals. They helped us reposition our brand with clarity and impeccable visuals.”
               </p>
             </div>
           </div>
-          <div class="testimonials-div">
+          <div class="testimonials__div">
             <img
+              class="testimonials__img"
               src="Assets/LucasRibeiro.jpg"
               srcset="Assets/LucasRibeiro.jpg 1x"
               sizes="(max-width: 900px) 60vw, 20vw"
               alt="CEO Lucas Ribeiro"
             />
-            <div class="testimonials-infos">
-              <p class="testimonials-name">Lucas Ribeiro, <strong>CEO</strong></p>
-              <p class="testimonials-text">
+            <div class="testimonials__infos">
+              <p class="testimonials__name">Lucas Ribeiro, <strong>CEO</strong></p>
+              <p class="testimonials__text">
                 “The website became fast, modern, and much more functional. The final experience exceeded our
                 expectations.”
               </p>
             </div>
           </div>
         </div>
-        <button class="testimonials-next" aria-label="Next Testimonial">›</button>
+        <button class="testimonials__next" aria-label="Next Testimonial">›</button>
       </section>
 
-      <section id="contact" class="contact">
-        <h2>Ready to transform your brand?</h2>
-        <p>We are here to help you take the next step with strategy, clarity, and smart design.</p>
+      <section class="contact" id="contact">
+        <h2 class="contact__title">Ready to transform your brand?</h2>
+        <p class="contact__text">
+          We are here to help you take the next step with strategy, clarity, and smart design.
+        </p>
 
-        <div class="contact-div">
+        <div class="contact__div">
           <div>
-            <p class="contact-address">
-              <strong> Address:</strong> <br />203 McLand - Cityland, 3203 <br />Countryland - Australia
+            <p class="contact__info contact__address">
+              <strong class="contact__strong"> Address:</strong> <br />203 McLand - Cityland, 3203 <br />Countryland -
+              Australia
               <br />
             </p>
-            <p class="contact-email">
-              <a href="mailto:contact@creativeweb.agency">
-                <strong>Email:</strong><br />
+            <p class="contact__info contact__email">
+              <a class="contact__link" href="mailto:contact@creativeweb.agency">
+                <strong class="contact__strong">Email:</strong><br />
                 contact@creativeweb.agency
               </a>
             </p>
-            <p class="contact-phone">
-              <a href="tel:+61400123456">
-                <strong> Phone: </strong><br />
+            <p class="contact__info contact__phone">
+              <a class="contact__link" href="tel:+61400123456">
+                <strong class="contact__strong"> Phone: </strong><br />
                 +61 400 123 456
               </a>
             </p>
           </div>
 
-          <div class="form-div">
-            <h3>Send a Message</h3>
-            <p>Tell us about your project. We respond as quickly as possible.</p>
-            <form class="form-contact" action="">
-              <input type="text" placeholder="Name" required />
-              <input type="email" placeholder="Email" required />
-              <textarea placeholder="Write your message here..." rows="4" required></textarea>
-              <button type="submit" class="btn btn--sm btn--primary">Send Message</button>
+          <div class="form__div">
+            <h3 class="form__div--title">Send a Message</h3>
+            <p class="form__div--text">Tell us about your project. We respond as quickly as possible.</p>
+            <form class="form__div--contact" action="">
+              <input class="form__div--input" type="text" placeholder="Name" required />
+              <input class="form__div--input" type="email" placeholder="Email" required />
+              <textarea
+                class="form__div--textarea"
+                placeholder="Write your message here..."
+                rows="4"
+                required
+              ></textarea>
+              <button class="form__div--btn btn btn--sm btn--primary" type="submit">Send Message</button>
             </form>
           </div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <nav class="navMenuFooter">
-        <a href="#home">Home</a>
-        <a href="#behindTheBrand">Behind the Brand</a> <a href="#solutions">Solutions</a>
-        <a href="#contact">Contact</a>
+    <footer class="footer">
+      <nav class="footer__nav">
+        <a href="#home" class="footer__link">Home</a>
+        <a href="#behindTheBrand" class="footer__link">Behind the Brand</a>
+        <a href="#solutions" class="footer__link">Solutions</a>
       </nav>
-      <p class="footer-text">Creative Web Agency — Creating digital experiences that drive brands</p>
-      <p class="footer-rights">© 2025 Creative Web Agency. All rights reserved.</p>
+      <p class="footer__text">Creative Web Agency — Creating digital experiences that drive brands</p>
+      <p class="footer__rights">© 2025 Creative Web Agency. All rights reserved.</p>
     </footer>
 
     <!-- modal employee -->
-    <dialog class="modal-employee" id="modal-employee" aria-labelledby="modal-employee-title" aria-modal="true">
-      <div class="modal-employee-content">
-        <button class="modal-employee-close">×</button>
+    <dialog class="modal__employee" id="modalEmployee" aria-labelledby="modalEmployee--title" aria-modal="true">
+      <div class="modal__employee--content">
+        <button class="modal__employee--close">×</button>
 
         <!-- Part 1 - Photo  -->
-        <img class="modal-employee-photo" src="" alt="" />
-
+        <img class="modal__employee--photo" src="" alt="" />
         <!-- Part 2 - Information -->
-        <div class="modal-employee-info">
-          <h3 id="modal-employee-title" class="modal-employee-name"></h3>
-          <p class="modal-employee-role"></p>
+        <div class="modal__employee--info">
+          <h3 id="modalEmployee--title" class="modal__employee--name"></h3>
+          <p class="modal__employee--role"></p>
         </div>
 
         <!-- Part 3 - Bio and List -->
-        <div class="modal-employee-body">
-          <p class="modal-employee-bio"></p>
-          <ul class="modal-employee-list"></ul>
+        <div class="modal__employee--body">
+          <p class="modal__employee--bio"></p>
+          <ul class="modal__employee--list"></ul>
         </div>
       </div>
     </dialog>
 
     <!-- modal of solutions -->
-    <dialog class="modal-solutions" id="modal-solutions" aria-labelledby="modal-solutions-label" aria-modal="true">
-      <div class="modal-solutions-content">
-        <button class="modal-solutions-close">×</button>
-        <h3 class="modal-solutions-title sr-only"></h3>
-        <p id="modal-solutions-label" class="modal-solutions-text"></p>
+    <dialog class="modal__solutions" id="modalSolutions" aria-labelledby="modal-solutions-label" aria-modal="true">
+      <div class="modal__solutions--content">
+        <button class="modal__solutions--close">×</button>
+        <h3 class="modal__solutions--title sr-only"></h3>
+        <p id="modalSolutions--label" class="modal__solutions--text"></p>
       </div>
     </dialog>
 
     <!-- Modal portfolio-->
-    <dialog class="modal-portfolio" id="modal-portfolio" aria-labelledby="modal-portfolio-title" aria-modal="true">
-      <div class="modal-portfolio-content">
-        <button class="modal-portfolio-close">×</button>
-        <h3 id="modal-portfolio-title" class="modal-portfolio-title">Portfolio under construction</h3>
+    <dialog class="modal__portfolio" id="modalPortfolio" aria-labelledby="modalPortfolio--title" aria-modal="true">
+      <div class="modal__portfolio--content">
+        <button class="modal__portfolio--close">×</button>
+        <h3 id="modalPortfolio--title" class="modal__portfolio--title">Portfolio under construction</h3>
       </div>
     </dialog>
 

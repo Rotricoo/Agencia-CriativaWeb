@@ -62,14 +62,14 @@ const teamMembers = [
 ];
 
 // Employee modal
-const teamButtons = document.querySelectorAll(".behind-the-brand-bt");
-const employeeModal = document.getElementById("modal-employee");
-const employeePhoto = document.querySelector(".modal-employee-photo");
-const employeeName = document.querySelector(".modal-employee-name");
-const employeeRole = document.querySelector(".modal-employee-role");
-const employeeBio = document.querySelector(".modal-employee-bio");
-const employeeList = document.querySelector(".modal-employee-list");
-const employeeCloseBtn = document.querySelector(".modal-employee-close");
+const teamButtons = document.querySelectorAll(".team__btn");
+const employeeModal = document.getElementById("modalEmployee");
+const employeePhoto = document.querySelector(".modal__employee--photo");
+const employeeName = document.querySelector(".modal__employee--name");
+const employeeRole = document.querySelector(".modal__employee--role");
+const employeeBio = document.querySelector(".modal__employee--bio");
+const employeeList = document.querySelector(".modal__employee--list");
+const employeeCloseBtn = document.querySelector(".modal__employee--close");
 
 if (teamButtons.length && employeeModal) {
   teamButtons.forEach((button) => {
@@ -132,9 +132,9 @@ employeeModal?.addEventListener("cancel", (event) => {
 });
 
 // Portfolio modal
-const portfolioButton = document.querySelector(".bt-behind-the-brand");
-const portfolioModal = document.getElementById("modal-portfolio");
-const portfolioCloseBtn = portfolioModal?.querySelector(".modal-portfolio-close");
+const portfolioButton = document.querySelector(".team__cta--btn");
+const portfolioModal = document.getElementById("modalPortfolio");
+const portfolioCloseBtn = portfolioModal?.querySelector(".modal__portfolio--close");
 
 portfolioButton?.addEventListener("click", () => {
   if (!portfolioModal) return;
@@ -170,27 +170,27 @@ portfolioModal?.addEventListener("cancel", () => closePortfolioModal());
 
 // Header navigation (mobile menu)
 document.addEventListener("DOMContentLoaded", () => {
-  const header = document.querySelector("header");
-  const toggle = document.querySelector(".nav-toggle");
-  const nav = document.querySelector("#site-nav");
+  const header = document.querySelector(".site-header");
+  const toggle = document.querySelector(".site-header__toggle");
+  const nav = document.querySelector(".site-header__nav");
 
   if (!header || !toggle || !nav) return;
 
   toggle.addEventListener("click", () => {
-    const isOpen = header.classList.toggle("nav-open");
+    const isOpen = header.classList.toggle("site-header--open");
     toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
   });
 
   nav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      header.classList.remove("nav-open");
+      header.classList.remove("site-header--open");
       toggle.setAttribute("aria-expanded", "false");
     });
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      header.classList.remove("nav-open");
+      header.classList.remove("site-header--open");
       toggle.setAttribute("aria-expanded", "false");
     }
   });
@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Testimonials slider
 (function initTestimonials() {
-  const slides = Array.from(document.querySelectorAll(".testimonials-div"));
+  const slides = Array.from(document.querySelectorAll(".testimonials__div"));
   if (!slides.length) return;
 
   let currentIndex = slides.findIndex((slide) => slide.classList.contains("active"));
@@ -207,13 +207,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function showSlide() {
     slides.forEach((slide, index) => {
       const isActive = index === currentIndex;
-      slide.classList.toggle("active", isActive);
+      slide.classList.toggle("testimonials__div--active", isActive);
       slide.setAttribute("aria-hidden", isActive ? "false" : "true");
     });
   }
 
-  const nextBtn = document.querySelector(".testimonials-next");
-  const prevBtn = document.querySelector(".testimonials-prev");
+  const nextBtn = document.querySelector(".testimonials__next");
+  const prevBtn = document.querySelector(".testimonials__prev");
 
   nextBtn?.addEventListener("click", () => {
     currentIndex = (currentIndex + 1) % slides.length;
