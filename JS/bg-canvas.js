@@ -6,16 +6,19 @@
 
   const canvas = document.getElementById("canvas");
   if (!canvas) {
-    console.warn("bg-canvas.js: #canvas element not found. Effect disabled");
+    console.warn("bg-canvas.js: #canvas element not found. Effect disabled.");
     return;
   }
 
   const ctx = canvas.getContext("2d");
   if (!ctx) {
-    console.warn("bg-canvas.js: 2D context not available. Effect disabled");
+    console.warn("bg-canvas.js: 2D context not available. Effect disabled.");
     return;
   }
 
+  // ============================================================
+  // Settings
+  // ============================================================
   const SETTINGS = {
     // performance / quality
     scale: 0.1,
@@ -49,19 +52,34 @@
 
   const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
+  // Touch tap detection
+  const TAP_MAX_MS = 450;
+  const TAP_MAX_MOVE_PX = 12;
+
+  // Avoid spawning when user is interacting with UI
+  const INTERACTIVE_EXCLUDE_SELECTOR = "button, a, input, textarea, select, label, dialog";
+  const isExcludedTarget = (target) => target?.closest?.(INTERACTIVE_EXCLUDE_SELECTOR);
+
+  const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+  // ============================================================
+  // Helpers
+  // ============================================================
   const lerp = (a, b, t) => a + (b - a) * t;
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+  const rand = (min, max) => min + Math.random() * (max - min);
+  const randInt = (min, maxInclusive) => Math.floor(rand(min, maxInclusive + 1));
 
   function parseCssColorToRgb(color) {
     if (!color) return null;
 
-    const m = color.match(/rgba?\(([^)]+)\)/i);
+    const m = String(color).match(/rgba?\(([^)]+)\)/i);
     if (m) {
       const parts = m[1].split(",").map((v) => parseFloat(v.trim()));
       return { r: parts[0], g: parts[1], b: parts[2] };
     }
 
-    const hex = color.trim();
+    const hex = String(color).trim();
     if (/^#([0-9a-f]{3})$/i.test(hex)) {
       const h = hex.slice(1);
       return {
@@ -106,12 +124,9 @@
     return { base, highlight };
   }
 
-  // ---- Trail state ----
-  let pointer = null;
-  const targets = new Array(SETTINGS.trail_length).fill(null);
-  const positions = new Array(SETTINGS.trail_length).fill(0).map(() => ({ x: 0, y: 0 }));
-
-  // Render scale = quality (SETTINGS.scale) * screen pixel density (DPR)
+  // ============================================================
+  // Canvas sizing / render scale
+  // ============================================================
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
   let renderScale = SETTINGS.scale * DPR;
 
@@ -121,7 +136,6 @@
 
   function resizeCanvas() {
     renderScale = SETTINGS.scale * DPR;
-
     canvas.width = Math.floor(window.innerWidth * renderScale);
     canvas.height = Math.floor(window.innerHeight * renderScale);
 
@@ -133,13 +147,17 @@
   window.addEventListener("resize", resizeCanvas);
   resizeCanvas();
 
-  function setPointer(clientX, clientY) {
-    pointer = {
-      x: clientX * renderScale,
-      y: clientY * renderScale,
-    };
+  // ============================================================
+  // Trail state
+  // ============================================================
+  let pointer = null;
+  const targets = new Array(SETTINGS.trail_length).fill(null);
+  const positions = new Array(SETTINGS.trail_length).fill(0).map(() => ({ x: 0, y: 0 }));
 
-    // init trail on first move
+  function setPointer(clientX, clientY) {
+    pointer = { x: clientX * renderScale, y: clientY * renderScale };
+
+    // init trail on first input so it's visible on mobile taps too
     if (targets[0] === null) {
       for (let i = 0; i < targets.length; i++) {
         targets[i] = { x: pointer.x, y: pointer.y };
@@ -149,27 +167,19 @@
     }
   }
 
-  window.addEventListener("mousemove", (e) => setPointer(e.clientX, e.clientY));
-  window.addEventListener(
-    "touchmove",
-    (e) => {
-      if (!e.touches || e.touches.length === 0) return;
-      setPointer(e.touches[0].clientX, e.touches[0].clientY);
-    },
-    { passive: true }
-  );
-
-  // ---- Slime balls (acumulam no final da PÁGINA e empurram) ----
+  // ============================================================
+  // Slime balls
+  // ============================================================
   const slimeBalls = [];
   const SLIME_MARGIN_PX = 10;
 
   const SLIME = {
     BASE_R: 28,
 
-    // performance cap (segurança)
+    // performance cap
     MAX: 220,
 
-    // burst on click
+    // burst on input
     BURST_MIN: 2,
     BURST_MAX: 5,
     MICRO_R_MIN: 10,
@@ -197,8 +207,6 @@
     BREATH_SPEED: 1.35,
   };
 
-  const rand = (min, max) => min + Math.random() * (max - min);
-  const randInt = (min, maxInclusive) => Math.floor(rand(min, maxInclusive + 1));
   const clamp01 = (n) => clamp(n, 0, 1);
 
   function rgbToCss(rgb) {
@@ -214,17 +222,13 @@
     };
   }
 
-  const readSlimeColor = () => {
+  function readSlimeBaseRgb() {
     const root = getComputedStyle(document.documentElement);
-    return (
+    const base =
       root.getPropertyValue("--gooey-color").trim() ||
       root.getPropertyValue("--purple-medium").trim() ||
-      SETTINGS.color_fallback
-    );
-  };
+      SETTINGS.color_fallback;
 
-  function readSlimeBaseRgb() {
-    const base = readSlimeColor();
     return parseCssColorToRgb(base) || parseCssColorToRgb(SETTINGS.color_fallback) || { r: 131, g: 81, b: 242 };
   }
 
@@ -235,7 +239,6 @@
         ? mixRgb(baseRgb, { r: 255, g: 255, b: 255 }, brighten)
         : mixRgb(baseRgb, { r: 0, g: 0, b: 0 }, -brighten);
 
-    // tiny per-channel jitter (bem sutil)
     const jitter = () => rand(-10, 10);
     return {
       r: clamp(mixed.r + jitter(), 0, 255),
@@ -257,7 +260,7 @@
       vx,
       vy,
       r,
-      m: r * r, // massa ~ área (simplificado)
+      m: r * r, // mass ~ area
       phase: rand(0, Math.PI * 2),
       floatPhase: rand(0, Math.PI * 2),
       color: rgbToCss(rgb),
@@ -291,7 +294,6 @@
 
       if (dist > near) continue;
 
-      // prefere juntar bolinhas menores e próximas
       const score = dist + (a.r + b.r) * 0.25;
       if (score < bestScore) {
         bestScore = score;
@@ -302,11 +304,7 @@
 
     if (bestI < 0 || bestJ < 0 || bestI === bestJ) return false;
 
-    if (bestJ < bestI) {
-      const tmp = bestI;
-      bestI = bestJ;
-      bestJ = tmp;
-    }
+    if (bestJ < bestI) [bestI, bestJ] = [bestJ, bestI];
 
     const a = slimeBalls[bestI];
     const b = slimeBalls[bestJ];
@@ -319,7 +317,6 @@
 
     const r = Math.sqrt(a.r * a.r + b.r * b.r);
 
-    // recomputa cor por “mistura” via highlight aproximado (mantém vibe)
     const baseRgb = readSlimeBaseRgb();
     const newBall = createBall(x, y, r, baseRgb, vx, vy);
     newBall.alpha = clamp((a.alpha + b.alpha) * 0.5, 0.75, 1.2);
@@ -332,10 +329,7 @@
 
   function enforceSlimeBudget() {
     while (slimeBalls.length > SLIME.MAX) {
-      if (!mergeOnePairIfPossible()) {
-        // fallback (bem raro): remove a mais antiga
-        slimeBalls.shift();
-      }
+      if (!mergeOnePairIfPossible()) slimeBalls.shift();
     }
   }
 
@@ -367,18 +361,10 @@
     }
   }
 
-  window.addEventListener("click", (e) => {
-    if (e.target?.closest?.("button, a, input, textarea, select, label, dialog")) return;
-    spawnSlimeBurst(e.clientX, e.clientY);
-  });
-
   function updateSlimeBalls() {
     const doc = document.documentElement;
 
-    // chão = final da página (scrollHeight)
     const floorY = Math.max(doc.scrollHeight, document.body?.scrollHeight || 0) - SLIME_MARGIN_PX;
-
-    // paredes = largura da página
     const pageWidth = Math.max(doc.scrollWidth, window.innerWidth);
 
     // 1) integrate
@@ -395,7 +381,7 @@
       a.x += a.vx;
       a.y += a.vy + floatY;
 
-      // chão
+      // floor
       if (a.y + a.r > floorY) {
         a.y = floorY - a.r;
         a.vy *= -SLIME.FLOOR_RESTITUTION;
@@ -403,13 +389,13 @@
         if (Math.abs(a.vy) < 0.35) a.vy = 0;
       }
 
-      // teto
+      // ceiling
       if (a.y - a.r < 0) {
         a.y = a.r;
         a.vy *= -0.5;
       }
 
-      // paredes
+      // walls
       if (a.x - a.r < 0) {
         a.x = a.r;
         a.vx *= -SLIME.WALL_RESTITUTION;
@@ -419,7 +405,7 @@
       }
     }
 
-    // 2) spatial hash (para não virar pesado)
+    // 2) spatial hash
     const cellSize = 90;
     const grid = new Map();
     const keyOf = (cx, cy) => `${cx},${cy}`;
@@ -434,7 +420,7 @@
       else grid.set(k, [i]);
     }
 
-    // 3) collisions + viscosity + adhesion
+    // 3) collisions + adhesion
     for (let i = 0; i < slimeBalls.length; i++) {
       const a = slimeBalls[i];
 
@@ -452,7 +438,6 @@
             const dist = Math.hypot(dx, dy);
             const minDist = a.r + b.r - 1;
 
-            // adhesion zone (um “grudinho” sutil)
             const cohesionDist = minDist + SLIME.COHESION_PX;
             if (dist > 0.0001 && dist < cohesionDist) {
               const nx = dx / dist;
@@ -491,7 +476,6 @@
                   b.vy += ny * impulse * pushB;
                 }
               } else {
-                // adhesion (sem encostar): puxa bem de leve
                 const t = (cohesionDist - dist) / SLIME.COHESION_PX;
                 const pull = t * t * SLIME.STICKINESS * 0.04;
 
@@ -551,7 +535,7 @@
       ctx.globalAlpha = baseAlpha * ball.alpha;
       ctx.fill();
 
-      // highlight (sutil)
+      // highlight
       ctx.beginPath();
       ctx.arc(-rr * 0.15, -rr * 0.15, rr * 0.6, 0, Math.PI * 2);
       ctx.fillStyle = ball.highlight;
@@ -566,7 +550,84 @@
     ctx.restore();
   }
 
-  // ---- Main loop ----
+  // ============================================================
+  // Input handling (mouse + touch)
+  // ============================================================
+  let lastTouchSpawnAt = 0;
+  let touchTap = null;
+
+  window.addEventListener("mousemove", (e) => setPointer(e.clientX, e.clientY), { passive: true });
+
+  window.addEventListener(
+    "touchstart",
+    (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      setPointer(t.clientX, t.clientY);
+
+      touchTap = {
+        x: t.clientX,
+        y: t.clientY,
+        at: Date.now(),
+        moved: false,
+        excluded: isExcludedTarget(e.target),
+      };
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      setPointer(t.clientX, t.clientY);
+
+      if (touchTap && !touchTap.moved) {
+        const dx = t.clientX - touchTap.x;
+        const dy = t.clientY - touchTap.y;
+        if (Math.hypot(dx, dy) > TAP_MAX_MOVE_PX) touchTap.moved = true;
+      }
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchend",
+    () => {
+      if (!touchTap) return;
+
+      const now = Date.now();
+      const isTap = !touchTap.moved && now - touchTap.at <= TAP_MAX_MS;
+
+      if (isTap && !touchTap.excluded) {
+        lastTouchSpawnAt = now;
+        spawnSlimeBurst(touchTap.x, touchTap.y);
+      }
+
+      touchTap = null;
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchcancel",
+    () => {
+      touchTap = null;
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("click", (e) => {
+    if (isExcludedTarget(e.target)) return;
+    // On touch devices, a tap often triggers a synthetic click afterwards.
+    if (isTouchDevice && Date.now() - lastTouchSpawnAt < 650) return;
+    spawnSlimeBurst(e.clientX, e.clientY);
+  });
+
+  // ============================================================
+  // Main loop
+  // ============================================================
   function drawFrame() {
     if (prefersReducedMotion) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -577,9 +638,7 @@
 
     // push latest pointer into trail
     if (pointer) {
-      for (let i = targets.length - 1; i > 0; i--) {
-        targets[i] = targets[i - 1];
-      }
+      for (let i = targets.length - 1; i > 0; i--) targets[i] = targets[i - 1];
       targets[0] = { x: pointer.x, y: pointer.y };
     }
 
@@ -590,7 +649,7 @@
     const time = performance.now() * 0.001;
     const wobble = SETTINGS.idle_wobble_px * renderScale;
 
-    // shadow offset trick (para o trail)
+    // shadow offset trick (for the trail)
     ctx.shadowOffsetX = SETTINGS.shadow_offset;
     ctx.shadowOffsetY = SETTINGS.shadow_offset;
 
@@ -609,7 +668,7 @@
       const breathe = 1 + SETTINGS.breathe_amount * Math.sin(time * SETTINGS.breathe_speed + i);
       const r = radius * breathe;
 
-      // Pass 1: outer (darker base)
+      // Pass 1: outer
       ctx.beginPath();
       ctx.arc(
         positions[i].x + ox - SETTINGS.shadow_offset,
@@ -623,7 +682,7 @@
       ctx.fillStyle = blobColors.base;
       ctx.fill();
 
-      // Pass 2: inner (brighter highlight)
+      // Pass 2: inner
       ctx.beginPath();
       ctx.arc(
         positions[i].x + ox - SETTINGS.shadow_offset,
@@ -638,7 +697,6 @@
       ctx.fill();
     }
 
-    // Slimes
     updateSlimeBalls();
     drawSlimeBalls(time);
 
